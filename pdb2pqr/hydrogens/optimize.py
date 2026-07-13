@@ -11,9 +11,24 @@ import math
 
 from .. import quatfit as quat
 from .. import utilities as util
-from ..config import ANGLE_CUTOFF, DIST_CUTOFF
+from ..config import ANGLE_CUTOFF, DHAHA_ANGLE_CUTOFF, DIST_CUTOFF
 
 _LOGGER = logging.getLogger(__name__)
+
+#: H(D)–H(A) clash penalty energy
+BUMP_ENERGY = 10.0
+
+#: H(D)–H(A) clash distance (Å)
+BUMP_DISTANCE = 1.5
+
+#: Scale for favorable hydrogen-bond energy term
+MAX_HBOND_ENERGY = -10.0
+
+#: Scale for longer-range electrostatic energy term
+MAX_ELE_ENERGY = -1.0
+
+#: Upper distance (Å) for the longer-range electrostatic term
+MAX_ELE_DIST = 5.0
 
 
 class Optimize:
@@ -63,9 +78,6 @@ class Optimize:
     def is_hbond(self, donor, acc):
         """Determine whether this donor acceptor pair is a hydrogen bond.
 
-        .. todo::
-           Remove hard-coded hydrogen bond distance and angles.
-
         :param donor:  donor atom
         :param acc:  acceptor atom
         :return:  whether this pair is a hydrogen bond
@@ -86,11 +98,11 @@ class Optimize:
                 flag = False
                 # Check the H(D)-H(A) distance
                 hdist = util.distance(donorhatom.coords, acchatom.coords)
-                if hdist < 1.5:
+                if hdist < BUMP_DISTANCE:
                     continue
                 # Check the H(D)-H(A)-A angle
                 angle = self.get_hbond_angle(donorhatom, acchatom, acc)
-                if angle < 110.0:
+                if angle < DHAHA_ANGLE_CUTOFF:
                     flag = True
             if not flag:
                 continue
@@ -110,10 +122,6 @@ class Optimize:
            Lots of code in this function could be accelerated with
            :mod:`numpy`.
 
-        .. todo::
-           Lots of hard-coded parameters in this function that need to be
-           abstracted out.
-
         :param donor:  the first atom in the pair
         :type donor:  Atom
         :param acceptor:  the second atom in the pair
@@ -121,15 +129,6 @@ class Optimize:
         :return:  the energy of the pair
         :rtype:  float
         """
-        # Initialize some variables
-        bump_energy = 10.0
-        bump_distance = 1.5
-        max_hbond_energy = -10.0
-        max_ele_energy = -1.0
-        adh_angle_cutoff = ANGLE_CUTOFF
-        dhaha_angle_cutoff = 110.0
-        max_dha_dist = DIST_CUTOFF
-        max_ele_dist = 5.0
         energy = 0.0
         if not (donor.hdonor and acceptor.hacceptor):
             return energy
@@ -138,39 +137,39 @@ class Optimize:
         acceptorhs = [bond for bond in acceptor.bonds if bond.is_hydrogen]
         for donorhatom in donorhs:
             dist = util.distance(donorhatom.coords, acceptor.coords)
-            if dist > max_dha_dist and dist < max_ele_dist:
-                energy += max_ele_energy / (dist * dist)
+            if dist > DIST_CUTOFF and dist < MAX_ELE_DIST:
+                energy += MAX_ELE_ENERGY / (dist * dist)
                 continue
             # Case 1: Both donor and acceptor hydrogens are present
             for acceptorhatom in acceptorhs:
                 # Penalize if H(D) is too close to H(A)
                 hdist = util.distance(donorhatom.coords, acceptorhatom.coords)
-                if hdist < bump_distance:
-                    energy += bump_energy
+                if hdist < BUMP_DISTANCE:
+                    energy += BUMP_ENERGY
                     continue
                 # Assign energies based on angles
                 angle1 = Optimize.get_hbond_angle(acceptor, donor, donorhatom)
-                if angle1 <= adh_angle_cutoff:
+                if angle1 <= ANGLE_CUTOFF:
                     angle2 = Optimize.get_hbond_angle(
                         donorhatom, acceptorhatom, acceptor
                     )
-                    if angle2 < dhaha_angle_cutoff:
+                    if angle2 < DHAHA_ANGLE_CUTOFF:
                         angle2 = 1.0
                     else:
                         angle2 = (
-                            dhaha_angle_cutoff - angle2
-                        ) / dhaha_angle_cutoff
-                    angleterm = (adh_angle_cutoff - angle1) / adh_angle_cutoff
+                            DHAHA_ANGLE_CUTOFF - angle2
+                        ) / DHAHA_ANGLE_CUTOFF
+                    angleterm = (ANGLE_CUTOFF - angle1) / ANGLE_CUTOFF
                     energy += (
-                        max_hbond_energy / pow(dist, 3) * angleterm * angle2
+                        MAX_HBOND_ENERGY / pow(dist, 3) * angleterm * angle2
                     )
             # Case 2: Only donor hydrogens are present
             if not acceptorhs:
                 # Assign energies based on A-D-H(D) angle alone
                 angle1 = Optimize.get_hbond_angle(acceptor, donor, donorhatom)
-                if angle1 <= adh_angle_cutoff:
-                    angleterm = (adh_angle_cutoff - angle1) / adh_angle_cutoff
-                    energy += max_hbond_energy / pow(dist, 2) * angleterm
+                if angle1 <= ANGLE_CUTOFF:
+                    angleterm = (ANGLE_CUTOFF - angle1) / ANGLE_CUTOFF
+                    energy += MAX_HBOND_ENERGY / pow(dist, 2) * angleterm
         return energy
 
     def make_atom_with_no_bonds(self, atom, closeatom, addname):
