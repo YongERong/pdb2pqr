@@ -19,7 +19,7 @@ from .. import aa, cells, io
 from .. import definitions as defns
 from .. import quatfit as quat
 from .. import utilities as util
-from ..config import HYD_DEF_PATH
+from ..config import DONOR_ACCEPTOR_CUTOFF, HYD_DEF_PATH
 from . import structures
 from .structures import (
     HydrogenConformation,
@@ -440,7 +440,7 @@ class HydrogenRoutines:
                     ):
                         continue
                     dist = util.distance(atom.coords, closeatom.coords)
-                    if dist < 4.3:
+                    if dist < DONOR_ACCEPTOR_CUTOFF:
                         residue = atom.residue
                         hbond = PotentialBond(atom, closeatom, dist)
                         # Store the potential bond
