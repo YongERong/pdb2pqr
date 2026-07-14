@@ -538,7 +538,7 @@ class HIS(Amino):
         This function sets all neutral forms of HIS to neutral HIS by checking
         to see if optimization removed :makevar:`hacceptor` or
         :makevar:`hdonor` flags.
-        Otherwise HID is used as the default.
+        Otherwise HIE is used as the default.
         """
         errstr = ""
         if "HIP" not in self.patches and self.name not in ["HIP", "HSP"]:
@@ -557,9 +557,9 @@ class HIS(Amino):
             ):
                 if self.has_atom("HD1"):
                     self.remove_atom("HD1")
-            else:  # Default to HID
-                if self.has_atom("HE2"):
-                    self.remove_atom("HE2")
+            else:  # Default to HIE
+                if self.has_atom("HD1"):
+                    self.remove_atom("HD1")
         if self.has_atom("HD1") and self.has_atom("HE2"):
             self.ffname = "HIP"
         elif self.has_atom("HD1"):

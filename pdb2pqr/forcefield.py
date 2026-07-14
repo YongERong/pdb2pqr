@@ -405,7 +405,7 @@ class Forcefield:
             elif "HE2" in residue.map:
                 resname = "HIE"
             else:
-                resname = "HID"  # Default for no hydrogens
+                resname = "HIE"  # Default for no hydrogens
         elif residue.name == "HSP":
             resname = "HIP"
         elif residue.name == "HSE":

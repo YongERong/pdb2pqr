@@ -116,7 +116,7 @@ def test_broken_backbone(input_pdb, tmp_path):
 
 @pytest.mark.parametrize(
     "input_pdb, expected_pqr",
-    [pytest.param("cterm_hid.pdb", "cterm_hid_out.pqr", id="C-terminal HID")],
+    [pytest.param("cterm_hie.pdb", "cterm_hie_out.pqr", id="C-terminal HIE")],
 )
 def test_protonated_terminals(input_pdb, expected_pqr, tmp_path):
     """Tests for terminal residue protonation."""
