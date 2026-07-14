@@ -179,9 +179,6 @@ DONOR_ACCEPTOR_CUTOFF = 4.3
 #: Cutoff for H(D) - H(A) - A angle when acceptor already has hydrogens
 DHAHA_ANGLE_CUTOFF = 110.0
 
-#: Default state for HIS when only 1H present (HIE/HID)
-HIS_DEFAULT_STATE = "HIE"
-
 #: Avogadro's number
 AVOGADRO = 6.02214076e23
 
