@@ -3,6 +3,29 @@ Release history
 ###############
 
 ******************
+Unreleased
+**********
+
+Changes
+=======
+
+* Shortened hydrogen-bond distance cutoffs used during network optimization to
+  2.0 Å (donor hydrogen to acceptor) and 3.5 Å (donor–acceptor heavy atoms),
+  matching typical hydrogen-bond geometry. Previously these were 3.3 Å and
+  4.3 Å. Outputs may differ from older PDB2PQR versions for histidine tautomer
+  / ring hydrogen placement, hydroxyl and other polar hydrogen orientations,
+  ASN/GLN amide flips, and occasional side-chain debumping. Golden test PQRs
+  for ``cterm_hie``, ``1AJJ``, ``1BX8``, and ``1AFS`` were regenerated to match
+  the new behaviour. PQR comparison in tests now groups atoms by residue number
+  so per-residue hydrogen differences are not masked.
+* Widened the A–D–H(D) hydrogen-bond angle cutoff used during network
+  optimization from 20° to 30°. Outputs may differ from older PDB2PQR versions
+  for hydroxyl, phenol, carboxylic acid, and water hydrogen orientations
+  (parent heavy atoms unchanged). Golden test PQRs for ``cterm_hie``,
+  ``1AJJ``, ``1BX8``, and ``1AFS`` were regenerated again to match this
+  behaviour.
+
+******************
 3.7.1 (2024-12-27)
 ******************
 

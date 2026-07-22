@@ -168,13 +168,13 @@ PEPTIDE_DIST = 1.7
 REPAIR_LIMIT = 0.1
 
 #: Cutoff for A - D - H(D) hydrogen bond angle
-ANGLE_CUTOFF = 20.0
+ANGLE_CUTOFF = 30.0
 
 #: Cutoff for H(D) to A hydrogen bond distance
-DIST_CUTOFF = 3.3
+DIST_CUTOFF = 2.0
 
 #: Cutoff for donor–acceptor heavy-atom distance when finding candidate H-bonds
-DONOR_ACCEPTOR_CUTOFF = 4.3
+DONOR_ACCEPTOR_CUTOFF = 3.5
 
 #: Cutoff for H(D) - H(A) - A angle when acceptor already has hydrogens
 DHAHA_ANGLE_CUTOFF = 110.0
