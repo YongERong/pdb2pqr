@@ -168,7 +168,7 @@ PEPTIDE_DIST = 1.7
 REPAIR_LIMIT = 0.1
 
 #: Cutoff for A - D - H(D) hydrogen bond angle
-ANGLE_CUTOFF = 20.0
+ANGLE_CUTOFF = 30.0
 
 #: Cutoff for H(D) to A hydrogen bond distance
 DIST_CUTOFF = 2.0
