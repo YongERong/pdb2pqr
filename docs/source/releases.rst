@@ -18,6 +18,12 @@ Changes
   for ``cterm_hie``, ``1AJJ``, ``1BX8``, and ``1AFS`` were regenerated to match
   the new behaviour. PQR comparison in tests now groups atoms by residue number
   so per-residue hydrogen differences are not masked.
+* Widened the A–D–H(D) hydrogen-bond angle cutoff used during network
+  optimization from 20° to 30°. Outputs may differ from older PDB2PQR versions
+  for hydroxyl, phenol, carboxylic acid, and water hydrogen orientations
+  (parent heavy atoms unchanged). Golden test PQRs for ``cterm_hie``,
+  ``1AJJ``, ``1BX8``, and ``1AFS`` were regenerated again to match this
+  behaviour.
 
 ******************
 3.7.1 (2024-12-27)
